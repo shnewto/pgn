@@ -29,6 +29,7 @@ import Parser
         , chompUntil
         , chompWhile
         , getChompedString
+        , keyword
         , loop
         , map
         , multiComment
@@ -96,7 +97,16 @@ type alias Move =
     }
 
 
+polgarVsKasparovPgn =
+    "[Event \"Russia - The Rest of the World\"]\n[Site \"Moscow RUS\"]\n[Date \"2002.09.09\"]\n[EventDate \"2002.09.08\"]\n[Round \"5\"]\n[Result \"1-0\"]\n[White \"Judit Polgar\"]\n[Black \"Garry Kasparov\"]\n[ECO \"C67\"]\n[WhiteElo \"2681\"]\n[BlackElo \"2838\"]\n[PlyCount \"84\"]\n\n1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6 4. O-O Nxe4 5. d4 Nd6 6. Bxc6\ndxc6 7. dxe5 Nf5 8. Qxd8+ Kxd8 9. Nc3 h6 10. Rd1+ Ke8 11. h3\nBe7 12. Ne2 Nh4 13. Nxh4 Bxh4 14. Be3 Bf5 15. Nd4 Bh7 16. g4\nBe7 17. Kg2 h5 18. Nf5 Bf8 19. Kf3 Bg6 20. Rd2 hxg4+ 21. hxg4\nRh3+ 22. Kg2 Rh7 23. Kg3 f6 24. Bf4 Bxf5 25. gxf5 fxe5 26. Re1\nBd6 27. Bxe5 Kd7 28. c4 c5 29. Bxd6 cxd6 30. Re6 Rah8\n31. Rexd6+ Kc8 32. R2d5 Rh3+ 33. Kg2 Rh2+ 34. Kf3 R2h3+\n35. Ke4 b6 36. Rc6+ Kb8 37. Rd7 Rh2 38. Ke3 Rf8 39. Rcc7 Rxf5\n40. Rb7+ Kc8 41. Rdc7+ Kd8 42. Rxg7 Kc8 1-0"
 
+
+wikipediaPgn =
+    "[Event \"F/S Remove Match\"]\n[Site \"Belgrade, Serbia JUG\"]\n[Date \"1992.11.04\"]\n[Round \"29\"]\n[White \"Fischer, Robert J.\"]\n[Black \"Spassky, Boris V.\"]\n[Result \"1/2-1/2\"]\n\n1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 {This opening is called the Ruy Lopez.}\n4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Nb8 10. d4 Nbd7\n11. c4 c6 12. cxb5 axb5 13. Nc3 Bb7 14. Bg5 b4 15. Nb1 h6 16. Bh4 c5 17. dxe5\nNxe4 18. Bxe7 Qxe7 19. exd6 Qf6 20. Nbd2 Nxd6 21. Nc4 Nxc4 22. Bxc4 Nb6\n23. Ne5 Rae8 24. Bxf7+ Rxf7 25. Nxf7 Rxe1+ 26. Qxe1 Kxf7 27. Qe3 Qg5 28. Qxg5\nhxg5 29. b3 Ke6 30. a3 Kd6 31. axb4 cxb4 32. Ra5 Nd5 33. f3 Bc8 34. Kf2 Bf5\n35. Ra7 g6 36. Ra6+ Kc5 37. Ke1 Nf4 38. g3 Nxh3 39. Kd2 Kb5 40. Rd6 Kc5 41. Ra6\nNf2 42. g4 Bd3 43. Re6 1/2-1/2"
+
+
+
+-- 1-0"
 {- Parsers -}
 
 
@@ -104,7 +114,7 @@ type alias Move =
 -}
 parse : String -> Result (List DeadEnd) Pgn
 parse pgn =
-    Parser.run game pgn
+    Parser.run game polgarVsKasparovPgn
 
 
 {-| The `parseMove` function accepts input in the shape of a single line of [Movetext](https://en.wikipedia.org/wiki/Portable_Game_Notation#Movetext), i.e. `1. e4 e5`
@@ -278,18 +288,36 @@ move =
 
 turn : Parser Move
 turn =
+    let
+        optionalMoveNumber =
+            oneOf
+                [ succeed ()
+                    |. chompWhile Char.isDigit
+                    |. chompWhile (\c -> c == '.')
+                , succeed ()
+                ]
+
+        optionalResult =
+            oneOf
+                [ succeed ()
+                    |. keyword "1-0"
+                , succeed ()
+                    |. keyword "0-1"
+                , succeed ()
+                    |. keyword "1/2-1/2"
+                , succeed ()
+                ]
+    in
     succeed Move
-        |. spaces
         |= (getChompedString <| chompWhile Char.isDigit)
         |. symbol "."
-        |. spaces
         |. commentBlock
         |. spaces
         |= move
         |. spaces
         |. commentBlock
         |. spaces
-        |. chompWhile (\c -> Char.isDigit c || c == '.')
+        |. optionalMoveNumber
         |. spaces
         |. commentBlock
         |. spaces
@@ -299,6 +327,7 @@ turn =
         |. spaces
         |. endOfLineComment
         |. spaces
+        |. optionalResult
 
 
 turns : Parser (List Move)
