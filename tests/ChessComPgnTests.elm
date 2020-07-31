@@ -1,10 +1,6 @@
-module ChessComPgnTests exposing
-    ( testParseMovesFromChessDotCom
-    , testParseTagPairFromChessDotCom
-    )
+module ChessComPgnTests exposing (testParseMovesFromChessDotCom, testParseTagPairFromChessDotCom)
 
 import Expect
-import Parser exposing (deadEndsToString)
 import Pgn
 import Test exposing (Test, test)
 
@@ -19,7 +15,7 @@ testParseTagPairFromChessDotCom =
 
                 Err err ->
                     err
-                        |> deadEndsToString
+                        |> Pgn.parseErrorToString sampleChessDotComPgn
                         |> Expect.fail
 
 
@@ -33,7 +29,7 @@ testParseMovesFromChessDotCom =
 
                 Err err ->
                     err
-                        |> deadEndsToString
+                        |> Pgn.parseErrorToString sampleChessDotComPgn
                         |> Expect.fail
 
 

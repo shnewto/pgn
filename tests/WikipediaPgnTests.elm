@@ -1,10 +1,6 @@
-module WikipediaPgnTests exposing
-    ( testParseMovesWikipedia
-    , testParseTagPairWikipedia
-    )
+module WikipediaPgnTests exposing (testParseMovesWikipedia, testParseTagPairWikipedia)
 
 import Expect
-import Parser exposing (deadEndsToString)
 import Pgn
 import Test exposing (Test, test)
 
@@ -19,7 +15,7 @@ testParseTagPairWikipedia =
 
                 Err err ->
                     err
-                        |> deadEndsToString
+                        |> Pgn.parseErrorToString wikipediaPgn
                         |> Expect.fail
 
 
@@ -33,7 +29,7 @@ testParseMovesWikipedia =
 
                 Err err ->
                     err
-                        |> deadEndsToString
+                        |> Pgn.parseErrorToString wikipediaPgn
                         |> Expect.fail
 
 

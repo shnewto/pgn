@@ -1,11 +1,6 @@
-module PgnTests exposing
-    ( testParseTurnInlineComments
-    , testParseTurnNoComments
-    , testParseTurnsEolComments
-    )
+module PgnTests exposing (testParseTurnInlineComments, testParseTurnNoComments, testParseTurnsEolComments)
 
 import Expect
-import Parser exposing (deadEndsToString)
 import Pgn
 import Test exposing (Test, test)
 
@@ -27,7 +22,7 @@ testParseTurnNoComments =
 
                 Err err ->
                     err
-                        |> deadEndsToString
+                        |> Pgn.parseErrorToString turn
                         |> Expect.fail
 
 
@@ -48,7 +43,7 @@ testParseTurnInlineComments =
 
                 Err err ->
                     err
-                        |> deadEndsToString
+                        |> Pgn.parseErrorToString turn
                         |> Expect.fail
 
 
@@ -81,5 +76,5 @@ testParseTurnsEolComments =
 
                 Err err ->
                     err
-                        |> deadEndsToString
+                        |> Pgn.parseErrorToString turns
                         |> Expect.fail

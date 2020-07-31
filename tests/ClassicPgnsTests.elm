@@ -1,10 +1,6 @@
-module ClassicPgnsTests exposing
-    ( testParseMovesPolgarVsKasparov
-    , testParseTagPairPolgarVsKasparov
-    )
+module ClassicPgnsTests exposing (testParseMovesPolgarVsKasparov, testParseTagPairPolgarVsKasparov)
 
 import Expect
-import Parser exposing (deadEndsToString)
 import Pgn
 import Test exposing (Test, test)
 
@@ -19,7 +15,7 @@ testParseTagPairPolgarVsKasparov =
 
                 Err err ->
                     err
-                        |> deadEndsToString
+                        |> Pgn.parseErrorToString polgarVsKasparovPgn
                         |> Expect.fail
 
 
@@ -33,7 +29,7 @@ testParseMovesPolgarVsKasparov =
 
                 Err err ->
                     err
-                        |> deadEndsToString
+                        |> Pgn.parseErrorToString polgarVsKasparovPgn
                         |> Expect.fail
 
 
