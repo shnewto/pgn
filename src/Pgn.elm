@@ -360,6 +360,7 @@ moves =
 result : Parser String
 result =
     let
+        -- this is silly
         condition c =
             c == '1' || c == '2' || c == '0' || c == '/' || c == '-' || c == ' ' || c == '\t'
     in
