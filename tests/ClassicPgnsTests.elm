@@ -43,7 +43,7 @@ polgarVsKasparovPgn =
 
 polgarVsKasparovPgnTagPairParsed : List Pgn.TagPair
 polgarVsKasparovPgnTagPairParsed =
-    [ { title = "PlyCount", value = "84" }, { title = "BlackElo", value = "2838" }, { title = "WhiteElo", value = "2681" }, { title = "ECO", value = "C67" }, { title = "Black", value = "Garry Kasparov" }, { title = "White", value = "Judit Polgar" }, { title = "Result", value = "1-0" }, { title = "Round", value = "5" }, { title = "EventDate", value = "2002.09.08" }, { title = "Date", value = "2002.09.09" }, { title = "Site", value = "Moscow RUS" }, { title = "Event", value = "Russia - The Rest of the World" } ]
+    [ { title = "Event", value = "Russia - The Rest of the World" }, { title = "Site", value = "Moscow RUS" }, { title = "Date", value = "2002.09.09" }, { title = "EventDate", value = "2002.09.08" }, { title = "Round", value = "5" }, { title = "Result", value = "1-0" }, { title = "White", value = "Judit Polgar" }, { title = "Black", value = "Garry Kasparov" }, { title = "ECO", value = "C67" }, { title = "WhiteElo", value = "2681" }, { title = "BlackElo", value = "2838" }, { title = "PlyCount", value = "84" } ]
 
 
 polgarVsKasparovPgnMovesParsed : List Pgn.Move

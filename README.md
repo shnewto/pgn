@@ -37,6 +37,8 @@ The data begins with a roster or tag pairs that typically contain archival or su
 ...
 ```
 
+It's **important** to note that tag pairs are treated something like key, value pairs and the value must be in quotes! 
+
 After the tag pairs is the movetext that describes moves of the game, here in algebraic notation. The game starts with White moving their e2 pawn to the e4 square. Black follows by moving the e7 pawn to e5. On the 13th move White's knight captures on the h4 square and Black captures back on the h4 square.
 ```
 1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6 4. O-O Nxe4 5. d4 Nd6 6. Bxc6
@@ -50,3 +52,8 @@ This library also supports inline `{}` and end-of-line `;` comments in the movet
 2. a3 2.. h6; Theory's been thrown out the window!
 ```
 
+## Notes
+I'm still thinking about what to do with comments and whether I should be allowing them in and around tag pairs. If you have thoughts on the matter, let me know :)
+
+## Issues
+If you spot an issue or have trouble parsing a PGN I'm sorry! But also, I'd love to hear about it. Please create an issue and include the PGN itself in your report. And of course, feel free to make a PR 💖

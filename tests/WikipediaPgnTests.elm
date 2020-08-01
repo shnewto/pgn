@@ -43,7 +43,7 @@ wikipediaPgn =
 
 sampleWikipediaPgnTagPairParsed : List Pgn.TagPair
 sampleWikipediaPgnTagPairParsed =
-    [ { title = "Result", value = "1/2-1/2" }, { title = "Black", value = "Spassky, Boris V." }, { title = "White", value = "Fischer, Robert J." }, { title = "Round", value = "29" }, { title = "Date", value = "1992.11.04" }, { title = "Site", value = "Belgrade, Serbia JUG" }, { title = "Event", value = "F/S Remove Match" } ]
+    [ { title = "Event", value = "F/S Remove Match" }, { title = "Site", value = "Belgrade, Serbia JUG" }, { title = "Date", value = "1992.11.04" }, { title = "Round", value = "29" }, { title = "White", value = "Fischer, Robert J." }, { title = "Black", value = "Spassky, Boris V." }, { title = "Result", value = "1/2-1/2" } ]
 
 
 sampleWikipediaPgnMovesParsed : List Pgn.Move

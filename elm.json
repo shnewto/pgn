@@ -5,7 +5,8 @@
     "license": "MIT",
     "version": "1.0.0",
     "exposed-modules": [
-        "Pgn"
+        "Pgn",
+        "Pgn.Extra"
     ],
     "source-directories": [
         "src"

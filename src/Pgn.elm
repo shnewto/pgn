@@ -16,9 +16,14 @@ module Pgn exposing
 
 @docs parse, parseMove, parseMoves, parseTagPair, parseTagPairs
 
+
+# Errors
+
+@docs parseErrorToString
+
 -}
 
-import List.Extra exposing (mapAccuml)
+import List.Extra
 import Parser
     exposing
         ( (|.)
@@ -30,13 +35,8 @@ import Parser
         , Step(..)
         , andThen
         , backtrackable
-        , chompIf
-        , chompUntil
         , chompWhile
         , getChompedString
-        , getOffset
-        , int
-        , keyword
         , lineComment
         , loop
         , map
@@ -64,31 +64,33 @@ type alias Pgn =
 
 {-| The `TagPair` strcuture should minimally contain what is also known as the "Seven Tag Roster" (STR). The tag pairs can extend beyond the standard seven however. A good example of a the tag pairs describing a game looks like this:
 
-[ Event "Russia - The Rest of the World" ]
+        [ Event "Russia - The Rest of the World" ]
 
-[ Site "Moscow RUS" ]
+        [ Site "Moscow RUS" ]
 
-[ Date "2002.09.09" ]
+        [ Date "2002.09.09" ]
 
-[ EventDate "2002.09.08" ]
+        [ EventDate "2002.09.08" ]
 
-[ Round "5" ]
+        [ Round "5" ]
 
-[ Result "1-0" ]
+        [ Result "1-0" ]
 
-[ White "Judit Polgar" ]
+        [ White "Judit Polgar" ]
 
-[ Black "Garry Kasparov"
+        [ Black "Garry Kasparov"]
 
-[ ECO "C67" ]
+        [ ECO "C67" ]
 
-[ WhiteElo "2681" ]
+        [ WhiteElo "2681" ]
 
-[ BlackElo "2838" ]
+        [ BlackElo "2838" ]
 
-[ PlyCount "84" ]
+        [ PlyCount "84" ]
 
 Each statement (starting with `[` and ending with `]`) is a tag pair. So the tag pair `[Result "1-0"]` would be represented in the data structure as `{ title: "Result", value: "1-0"}`
+
+It's **important** to note that tag pairs are treated something like key, value pairs and the value must be in quotes!
 
 -}
 type alias TagPair =
@@ -98,7 +100,7 @@ type alias TagPair =
 
 
 {-| The `Move` data structure contains the move number and the move of each player.
-A move in PGN as `42. Rxg7 Kc8` would be represented in this data structure as `{ number: "42", white: "Rxg7", black: "Kc8"}`
+A move in PGN like `42. Rxg7 Kc8` would be represented in this data structure as `{ number: "42", white: "Rxg7", black: "Kc8"}`
 -}
 type alias Move =
     { number : String
@@ -112,6 +114,9 @@ type alias Move =
 
 
 {-| The `parse` function expects a complete PGN as a string and returns either a PGN or a [`DeadEnd`](https://package.elm-lang.org/packages/elm/parser/latest/Parser#DeadEnd) error.
+
+For more information from any errors you see, check out the `parseErrorToString` function.
+
 -}
 parse : String -> Result (List DeadEnd) Pgn
 parse pgn =
@@ -120,7 +125,8 @@ parse pgn =
 
 {-| The `parseMove` function accepts input in the shape of a single line of [Movetext](https://en.wikipedia.org/wiki/Portable_Game_Notation#Movetext), i.e. `1. e4 e5`
 
-        parseMove "1. e4 e5" == Ok({number: "1", white: "e4", black: "e5"})
+        parseMove "1. e4 e5" ==
+            Ok { number = "1", white = "e4", black = "e5" }
 
 -}
 parseMove : String -> Result (List DeadEnd) Move
@@ -130,7 +136,15 @@ parseMove t =
 
 {-| The `parseMoves` function accepts string input in the shape of a multiple lines of [Movetext](https://en.wikipedia.org/wiki/Portable_Game_Notation#Movetext), i.e. `1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6`
 
-        parseMoves "1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6" == Ok([{number: "1", white: "e4", black: "e5"}, {number: "2", white: "Nf3", black: "Nc6"}, {number: "3", white: "Bb5", black: "Nf6"}])
+        parseMoves "1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6" ==
+            Ok
+                [ { number = "1"
+                  , white = "e4"
+                  , black = "e5"
+                  }
+                , { number = "2", white = "Nf3", black = "Nc6" }
+                , { number = "3", white = "Bb5", black = "Nf6" }
+                ]
 
 -}
 parseMoves : String -> Result (List DeadEnd) (List Move)
@@ -140,7 +154,8 @@ parseMoves t =
 
 {-| The `parseTagPair` function accepts string input in the shape of a single tag pair, i.e. `[EventDate "2002.09.08"]`
 
-        parseTagPair "[EventDate \"2002.09.08\"]" == Ok({title: "EventDate", value: "2002.09.08"})
+        parseTagPair "[EventDate \"2002.09.08\"]" ==
+            Ok { title = "EventDate", value = "2002.09.08" }
 
 -}
 parseTagPair : String -> Result (List DeadEnd) TagPair
@@ -150,7 +165,13 @@ parseTagPair r =
 
 {-| The `parseTagPairs` function accepts string input in the shape of a series of tag pairs, i.e. `[EventDate "2002.09.08"] [Round "5"]`
 
-        parseTagPairs "[EventDate \"2002.09.08\"]  [Round \"5\"]" == Ok({title: "EventDate", value: "2002.09.08"}, {title: "Round", value: "5"})
+        parseTagPairs "[EventDate \"2002.09.08\"]  [Round \"5\"]" ==
+            Ok
+                [ { title = "EventDate"
+                  , value = "2002.09.08"
+                  }
+                , { title = "Round", value = "5" }
+                ]
 
 -}
 parseTagPairs : String -> Result (List DeadEnd) (List TagPair)
@@ -159,66 +180,61 @@ parseTagPairs r =
 
 
 
-{- Seven Tags (not exposed yet) -}
+{- Errors -}
 
 
-type alias SevenTag =
-    { event : Maybe String
-    , site : Maybe String
-    , date : Maybe String
-    , round : Maybe String
-    , white : Maybe String
-    , black : Maybe String
-    , result : Maybe String
-    }
+{-| The `parseErrorToString` is to help pinpoint what's causing issues with a parse. It simply produces a string for human consumption that describes what the parser thinks went wrong, followed by the line of the error then the token itself in `''`. For example, attempting to parse this invalid tag pair:
 
+        [Event After the title, everything else in the tag pair needs to be in quotes!]
 
-toSevenTag : List TagPair -> SevenTag
-toSevenTag roster =
+would result in this output:
+
+        error on row: 1, col: 8. Problem: Expecting '"'
+
+        > '[Event After the title everything else in the tag pair needs to be in quotes!]'
+        vent 'A'fter
+
+It might look a little strage but last line of the error string includes a few characters to the right and to the left of the offender.
+
+-}
+parseErrorToString : String -> List DeadEnd -> String
+parseErrorToString source deadEnds =
     let
-        sevenTag =
-            { event = Nothing
-            , site = Nothing
-            , date = Nothing
-            , round = Nothing
-            , white = Nothing
-            , black = Nothing
-            , result = Nothing
-            }
-
-        update a b =
-            ( checkTag a b, [] )
-
-        ( res, _ ) =
-            mapAccuml update sevenTag roster
-
-        checkTag st r =
-            case String.toLower r.title of
-                "event" ->
-                    { st | event = Just r.value }
-
-                "site" ->
-                    { st | site = Just r.value }
-
-                "date" ->
-                    { st | date = Just r.value }
-
-                "round" ->
-                    { st | round = Just r.value }
-
-                "white" ->
-                    { st | white = Just r.value }
-
-                "black" ->
-                    { st | black = Just r.value }
-
-                "result" ->
-                    { st | result = Just r.value }
-
-                _ ->
-                    st
+        rows =
+            String.split "\n" source
     in
-    res
+    deadEnds
+        |> List.map
+            (\de ->
+                let
+                    row =
+                        rows |> List.Extra.getAt (de.row - 1) |> Maybe.withDefault ""
+                in
+                "error on row:  "
+                    ++ String.fromInt de.row
+                    ++ ", col: "
+                    ++ String.fromInt de.col
+                    ++ ". Problem: "
+                    ++ problemToString de.problem
+                    ++ "\n\n"
+                    ++ "> '"
+                    ++ row
+                    ++ "'\n"
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 6) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 5) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 4) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 3) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 2) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ "'"
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 1) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ "'"
+                    ++ (row |> String.toList |> List.Extra.getAt de.col |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 1) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 2) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 3) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 4) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+            )
+        |> String.join "\n"
 
 
 
@@ -257,7 +273,7 @@ tagPairs =
                 [ succeed (\item -> Loop (item :: items))
                     |= tagPair
                 , succeed ()
-                    |> map (\_ -> Done items)
+                    |> map (\_ -> Done <| List.reverse items)
                 ]
     in
     loop [] pairs
@@ -357,46 +373,6 @@ game =
         |= tagPairs
         |= moves
         |. result
-
-
-parseErrorToString : String -> List DeadEnd -> String
-parseErrorToString source deadEnds =
-    let
-        rows =
-            String.split "\n" source
-    in
-    deadEnds
-        |> List.map
-            (\de ->
-                let
-                    row =
-                        rows |> List.Extra.getAt (de.row - 1) |> Maybe.withDefault ""
-                in
-                "error on row:  "
-                    ++ String.fromInt de.row
-                    ++ ", col: "
-                    ++ String.fromInt de.col
-                    ++ ". Problem: "
-                    ++ problemToString de.problem
-                    ++ "\n\n"
-                    ++ "> '"
-                    ++ row
-                    ++ "'\n"
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 6) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 5) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 4) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 3) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 2) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ "'"
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 1) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ "'"
-                    ++ (row |> String.toList |> List.Extra.getAt de.col |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 1) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 2) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 3) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 4) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-            )
-        |> String.join "\n"
 
 
 problemToString : Problem -> String
