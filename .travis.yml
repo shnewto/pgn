@@ -3,3 +3,10 @@ elm:
   - 0.19.0 
 elm-test: 0.19.1
 elm-format: 0.8.0
+node_js: 10.21.0
+
+script:
+  - elm make
+  - elm-format . --validate
+  - elm-test
+  
