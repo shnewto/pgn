@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/shnewto/pgn.svg?branch=main)](https://travis-ci.org/shnewto/pgn)
-![Elm package](https://shields.cdn.bka.li/elm-package/v/shnewto/pgn)
+[![Elm package](https://shields.cdn.bka.li/elm-package/v/shnewto/pgn)](https://package.elm-lang.org/packages/shnewto/pgn/latest/)
 [![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 # Pgn
