@@ -248,20 +248,11 @@ charIsWhitespace c =
 
 tagPair : Parser TagPair
 tagPair =
-    let
-        key : Parser String
-        key =
-            variable
-                { start = \c -> not <| charIsWhitespace c
-                , inner = \c -> not <| charIsWhitespace c
-                , reserved = Set.empty
-                }
-    in
     succeed TagPair
         |. spaces
         |. symbol "["
         |. spaces
-        |= key
+        |= (getChompedString <| chompWhile (\c -> not <| charIsWhitespace c))
         |. spaces
         |= (getChompedString <| multiComment "\"" "\"" Nestable)
         |. spaces

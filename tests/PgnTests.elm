@@ -1,4 +1,4 @@
-module PgnTests exposing (testParseTurnInlineComments, testParseTurnNoComments, testParseTurnsEolComments)
+module PgnTests exposing (testBangScenarioPropTestsRevealed, testParseTurnInlineComments, testParseTurnNoComments, testParseTurnsEolComments)
 
 import Expect
 import Pgn
@@ -77,4 +77,27 @@ testParseTurnsEolComments =
                 Err err ->
                     err
                         |> Pgn.parseErrorToString turns
+                        |> Expect.fail
+
+
+testBangScenarioPropTestsRevealed : Test
+testBangScenarioPropTestsRevealed =
+    let
+        tagpair =
+            "[! \"!\"]"
+
+        res =
+            { title = "!"
+            , value = "!"
+            }
+    in
+    test "Test an exclamation point in a tag pair parsed correcrtly" <|
+        \_ ->
+            case Pgn.parseTagPair tagpair of
+                Ok t ->
+                    Expect.equal t res
+
+                Err err ->
+                    err
+                        |> Pgn.parseErrorToString tagpair
                         |> Expect.fail
