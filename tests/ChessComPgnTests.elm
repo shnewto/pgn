@@ -49,4 +49,60 @@ sampleChessDotComPgnTagPairParsed =
 
 sampleChessDotComPgnMovesParsed : List Pgn.Move
 sampleChessDotComPgnMovesParsed =
-    [ { black = "d5", number = "1", white = "e4" }, { black = "e6", number = "2", white = "f3" }, { black = "Nc6", number = "3", white = "f4" }, { black = "a6", number = "4", white = "Bb5" }, { black = "bxc6", number = "5", white = "Bxc6+" }, { black = "Be7", number = "6", white = "d3" }, { black = "Nf6", number = "7", white = "Nf3" }, { black = "O-O", number = "8", white = "Nbd2" }, { black = "Ng4", number = "9", white = "c4" }, { black = "Bb4+", number = "10", white = "Nb3" }, { black = "Ne3", number = "11", white = "Bd2" }, { black = "Nc2+", number = "12", white = "Qe2" }, { black = "Nxa1", number = "13", white = "Kf1" }, { black = "Bc5", number = "14", white = "Nxa1" }, { black = "Ba7", number = "15", white = "Nb3" }, { black = "Re8", number = "16", white = "Bb4" }, { black = "Qf6", number = "17", white = "Na5" }, { black = "Qxf4", number = "18", white = "Nxc6" }, { black = "Qf6", number = "19", white = "Bd2" }, { black = "Qg6", number = "20", white = "Bg5" }, { black = "Rxe7", number = "21", white = "Ne7+" }, { black = "f6", number = "22", white = "Bxe7" }, { black = "Qg5", number = "23", white = "Nh4" }, { black = "Qc1+", number = "24", white = "Nf3" }, { black = "Bd4", number = "25", white = "Ne1" }, { black = "Bd7", number = "26", white = "Ba3" }, { black = "Bxb2", number = "27", white = "Bb4" }, { black = "Qf4+", number = "28", white = "Qc2" }, { black = "Bc1", number = "29", white = "Ke2" }, { black = "Be3", number = "30", white = "Kd1" }, { black = "dxe4", number = "31", white = "Nf3" }, { black = "e5", number = "32", white = "dxe4" }, { black = "Rd8", number = "33", white = "Bd2" }, { black = "Ba4+", number = "34", white = "Qd3" }, { black = "Bd1+", number = "35", white = "Ke2" }, { black = "Rxd3", number = "36", white = "Rxd1" }, { black = "Bxd2", number = "37", white = "Kxd3" }, { black = "Qxh2", number = "38", white = "Nxd2" }, { black = "Qxg2", number = "39", white = "c5" }, { black = "h5", number = "40", white = "Nc4" }, { black = "Qf1+", number = "41", white = "Rd2" }, { black = "Qe1", number = "42", white = "Kc3" }, { black = "h4", number = "43", white = "Kb4" }, { black = "Qxe4", number = "44", white = "Ka5" }, { black = "h3", number = "45", white = "Nb2" }, { black = "Qf4", number = "46", white = "Kxa6" }, { black = "Kf7", number = "47", white = "Rd8+" }, { black = "Kg6", number = "48", white = "Rd7+" }, { black = "h2", number = "49", white = "Kb7" }, { black = "Qf3+", number = "50", white = "Rd1" }, { black = "h1", number = "51", white = "Kxc7" } ]
+    [ { black = "d5", number = "1", white = "e4" }
+    , { black = "e6", number = "2", white = "f3" }
+    , { black = "Nc6", number = "3", white = "f4" }
+    , { black = "a6", number = "4", white = "Bb5" }
+    , { black = "bxc6", number = "5", white = "Bxc6+" }
+    , { black = "Be7", number = "6", white = "d3" }
+    , { black = "Nf6", number = "7", white = "Nf3" }
+    , { black = "O-O", number = "8", white = "Nbd2" }
+    , { black = "Ng4", number = "9", white = "c4" }
+    , { black = "Bb4+", number = "10", white = "Nb3" }
+    , { black = "Ne3", number = "11", white = "Bd2" }
+    , { black = "Nc2+", number = "12", white = "Qe2" }
+    , { black = "Nxa1", number = "13", white = "Kf1" }
+    , { black = "Bc5", number = "14", white = "Nxa1" }
+    , { black = "Ba7", number = "15", white = "Nb3" }
+    , { black = "Re8", number = "16", white = "Bb4" }
+    , { black = "Qf6", number = "17", white = "Na5" }
+    , { black = "Qxf4", number = "18", white = "Nxc6" }
+    , { black = "Qf6", number = "19", white = "Bd2" }
+    , { black = "Qg6", number = "20", white = "Bg5" }
+    , { black = "Rxe7", number = "21", white = "Ne7+" }
+    , { black = "f6", number = "22", white = "Bxe7" }
+    , { black = "Qg5", number = "23", white = "Nh4" }
+    , { black = "Qc1+", number = "24", white = "Nf3" }
+    , { black = "Bd4", number = "25", white = "Ne1" }
+    , { black = "Bd7", number = "26", white = "Ba3" }
+    , { black = "Bxb2", number = "27", white = "Bb4" }
+    , { black = "Qf4+", number = "28", white = "Qc2" }
+    , { black = "Bc1", number = "29", white = "Ke2" }
+    , { black = "Be3", number = "30", white = "Kd1" }
+    , { black = "dxe4", number = "31", white = "Nf3" }
+    , { black = "e5", number = "32", white = "dxe4" }
+    , { black = "Rd8", number = "33", white = "Bd2" }
+    , { black = "Ba4+", number = "34", white = "Qd3" }
+    , { black = "Bd1+", number = "35", white = "Ke2" }
+    , { black = "Rxd3", number = "36", white = "Rxd1" }
+    , { black = "Bxd2", number = "37", white = "Kxd3" }
+    , { black = "Qxh2", number = "38", white = "Nxd2" }
+    , { black = "Qxg2", number = "39", white = "c5" }
+    , { black = "h5", number = "40", white = "Nc4" }
+    , { black = "Qf1+", number = "41", white = "Rd2" }
+    , { black = "Qe1", number = "42", white = "Kc3" }
+    , { black = "h4", number = "43", white = "Kb4" }
+    , { black = "Qxe4", number = "44", white = "Ka5" }
+    , { black = "h3", number = "45", white = "Nb2" }
+    , { black = "Qf4", number = "46", white = "Kxa6" }
+    , { black = "Kf7", number = "47", white = "Rd8+" }
+    , { black = "Kg6", number = "48", white = "Rd7+" }
+    , { black = "h2", number = "49", white = "Kb7" }
+    , { black = "Qf3+", number = "50", white = "Rd1" }
+    , { black = "h1=Q", number = "51", white = "Kxc7" }
+    , { black = "Qxh1", number = "52", white = "Rxh1" }
+    , { black = "Qg2", number = "53", white = "c6" }
+    , { black = "Qxb2+", number = "54", white = "Kb7" }
+    , { black = "Qb8", number = "55", white = "Ka6" }
+    , { black = "e4", number = "56", white = "a4" }
+    ]

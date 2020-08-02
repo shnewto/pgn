@@ -1,4 +1,4 @@
-module PgnTests exposing (testParseTurnInlineComments, testParseTurnNoComments, testParseTurnsEolComments)
+module PgnTests exposing (testBangScenarioPropTestsRevealed, testParseTurnInlineComments, testParseTurnNoComments, testParseTurnsEolComments)
 
 import Expect
 import Pgn
@@ -33,7 +33,7 @@ testParseTurnInlineComments =
             "11. {[some comments] [and more]} Bd2 {another set} 11... {even more} Ne3 {lastly, these}"
 
         res =
-            { number = "11", white = "Bd2", black = "Ne3" }
+            { black = "Ne3", number = "11", white = "Bd2" }
     in
     test "Test that a turn with inline comments parses correctly" <|
         \_ ->
@@ -54,17 +54,17 @@ testParseTurnsEolComments =
             "11. Bd2 11... Ne3; comment on turn 11\n12. Qe2 12... Nc2+; comment on turn 12\n13. Kf1 13... Nxa1; comment on turn 13\n"
 
         res =
-            [ { number = "11"
+            [ { black = "Ne3"
+              , number = "11"
               , white = "Bd2"
-              , black = "Ne3"
               }
-            , { number = "12"
+            , { black = "Nc2+"
+              , number = "12"
               , white = "Qe2"
-              , black = "Nc2+"
               }
-            , { number = "13"
+            , { black = "Nxa1"
+              , number = "13"
               , white = "Kf1"
-              , black = "Nxa1"
               }
             ]
     in
@@ -77,4 +77,27 @@ testParseTurnsEolComments =
                 Err err ->
                     err
                         |> Pgn.parseErrorToString turns
+                        |> Expect.fail
+
+
+testBangScenarioPropTestsRevealed : Test
+testBangScenarioPropTestsRevealed =
+    let
+        tagpair =
+            "[! \"!\"]"
+
+        res =
+            { title = "!"
+            , value = "!"
+            }
+    in
+    test "Test an exclamation point in a tag pair parsed correcrtly" <|
+        \_ ->
+            case Pgn.parseTagPair tagpair of
+                Ok t ->
+                    Expect.equal t res
+
+                Err err ->
+                    err
+                        |> Pgn.parseErrorToString tagpair
                         |> Expect.fail

@@ -8,9 +8,6 @@
         "Pgn",
         "Pgn.Extra"
     ],
-    "source-directories": [
-        "src"
-    ],
     "elm-version": "0.19.1 <= v < 0.20.0",
     "dependencies": {
         "elm/core": "1.0.5 <= v < 2.0.0",
@@ -18,6 +15,10 @@
         "elm-community/list-extra": "8.2.4 <= v < 9.0.0"
     },
     "test-dependencies": {
-        "elm-explorations/test": "1.2.2 <= v < 2.0.0"
-    }
+        "elm-explorations/test": "1.2.2 <= v < 2.0.0",
+        "elm-community/random-extra": "3.1.0 <= v < 4.0.0"
+    },
+    "source-directories": [
+        "src"
+    ]
 }
