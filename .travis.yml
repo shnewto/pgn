@@ -1,10 +1,4 @@
-language: elm
-cache: yarn
-
-before_script:
-  - yarn global add elm
-  - yarn global add elm-test
-  - yarn global add elm-format
+language: node_js
   
 script:
   - elm make
