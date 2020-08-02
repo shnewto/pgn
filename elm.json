@@ -3,7 +3,7 @@
     "name": "shnewto/pgn",
     "summary": "A library for parsing \"Portable Game Notation\" (PGN) for standard chess.",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "exposed-modules": [
         "Pgn",
         "Pgn.Extra"
