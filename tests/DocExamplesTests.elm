@@ -83,10 +83,11 @@ testParseErrorToString =
             Pgn.parseTagPair tagPair
 
         expectedErrorString =
-            """error on row:  1, col: 8. Problem: Expecting '"'
+            """
 
-> '[Event After the title everything else in the tag pair needs to be in quotes!]'
-vent 'A'fter """
+error on row:  1, col: 8. Problem: Expecting: "
+> [Event After the title everything else in the tag pair needs to be in quotes!]
+   ^"""
     in
     test "Test that the example used in the parseErrorToString docs produces an expected result" <|
         \_ ->
