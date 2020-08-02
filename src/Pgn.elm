@@ -209,36 +209,41 @@ parseErrorToString source deadEnds =
                 let
                     row =
                         rows |> List.Extra.getAt (de.row - 1) |> Maybe.withDefault ""
+
+                    update a _ =
+                        ( a ++ " ", [] )
+
+                    {- start with spaces to cover the lenght of the row's leading characters "> " -}
+                    inital =
+                        "  "
+
+                    --
+                    ( spacesToProblem, _ ) =
+                        List.Extra.mapAccuml update inital <| List.range 1 de.row
                 in
-                "error on row:  "
+                "\n\nerror on row:  "
                     ++ String.fromInt de.row
                     ++ ", col: "
                     ++ String.fromInt de.col
                     ++ ". Problem: "
                     ++ problemToString de.problem
-                    ++ "\n\n"
-                    ++ "> '"
+                    ++ "\n"
+                    ++ "> "
                     ++ row
-                    ++ "'\n"
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 6) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 5) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 4) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 3) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 2) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ "'"
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col - 1) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ "'"
-                    ++ (row |> String.toList |> List.Extra.getAt de.col |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 1) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 2) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 3) |> Maybe.map String.fromChar |> Maybe.withDefault "")
-                    ++ (row |> String.toList |> List.Extra.getAt (de.col + 4) |> Maybe.map String.fromChar |> Maybe.withDefault "")
+                    ++ "\n"
+                    ++ spacesToProblem
+                    ++ "^"
             )
-        |> String.join "\n"
+        |> String.join ""
 
 
 
 {- Internal -}
+
+
+charIsWhitespace : Char -> Bool
+charIsWhitespace c =
+    c == ' ' || c == '\t' || c == '\n' || c == '\u{000D}'
 
 
 tagPair : Parser TagPair
@@ -247,8 +252,8 @@ tagPair =
         key : Parser String
         key =
             variable
-                { start = Char.isAlphaNum
-                , inner = \c -> Char.isAlphaNum c
+                { start = \c -> not <| charIsWhitespace c
+                , inner = \c -> not <| charIsWhitespace c
                 , reserved = Set.empty
                 }
     in
@@ -290,10 +295,48 @@ maybeCommentBlock =
 
 movetext : Parser String
 movetext =
+    let
+        legalFirstCharMoveText =
+            [ 'a'
+            , 'b'
+            , 'c'
+            , 'd'
+            , 'e'
+            , 'f'
+            , 'g'
+            , 'h'
+            , 'K'
+            , 'Q'
+            , 'B'
+            , 'N'
+            , 'K'
+            , 'n'
+            , 'R'
+            , 'O'
+            , 'o'
+            ]
+
+        allMoveText =
+            legalFirstCharMoveText
+                ++ [ '1'
+                   , '2'
+                   , '3'
+                   , '4'
+                   , '5'
+                   , '6'
+                   , '7'
+                   , '8'
+                   , '-'
+                   , '+'
+                   , '#'
+                   , '='
+                   , 'x'
+                   ]
+    in
     variable
-        { start = Char.isAlpha
-        , inner = \c -> Char.isAlphaNum c || c == '+' || c == '#' || c == '-'
-        , reserved = Set.fromList [ "1-0, 0-1", "1/2-1/2" ]
+        { start = \c -> List.member c legalFirstCharMoveText
+        , inner = \c -> List.member c allMoveText
+        , reserved = Set.fromList <| [ "1-0, 0-1", "1/2-1/2" ]
         }
 
 
@@ -380,7 +423,7 @@ problemToString : Problem -> String
 problemToString problem =
     case problem of
         Expecting s ->
-            "Expecting '" ++ s ++ "'"
+            "Expecting: " ++ s
 
         ExpectingInt ->
             "ExpectingInt"
@@ -404,10 +447,10 @@ problemToString problem =
             "ExpectingVariable"
 
         ExpectingSymbol s ->
-            "ExpectingSymbol '" ++ s ++ "'"
+            "ExpectingSymbol: " ++ s
 
         ExpectingKeyword s ->
-            "ExpectingKeyword '" ++ s ++ "'"
+            "ExpectingKeyword: " ++ s
 
         ExpectingEnd ->
             "ExpectingEnd"
@@ -416,7 +459,7 @@ problemToString problem =
             "UnexpectedChar"
 
         Problem s ->
-            "Problem '" ++ s ++ "'"
+            "Problem: " ++ s
 
         BadRepeat ->
             "BadRepeat"
