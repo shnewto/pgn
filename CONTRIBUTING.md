@@ -1,4 +1,4 @@
-# Contributing to pgn
+# Contributing to Pgn
 
 :wave: welcome! Thanks for taking time to contribute!
 
