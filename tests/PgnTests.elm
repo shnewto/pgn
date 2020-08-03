@@ -1,12 +1,4 @@
-module PgnTests exposing
-    ( testParseTurnInlineComments
-    , testParseTurnNoComments
-    , testParseTurnsEolComments
-    , testPropTestFailSenario_01
-    , testPropTestFailSenario_02
-    , testPropTestFailSenario_03
-    , testPropTestFailSenario_04
-    )
+module PgnTests exposing (testParseTurnInlineComments, testParseTurnNoComments, testParseTurnsEolComments, testPropTestFailSenario_01, testPropTestFailSenario_02, testPropTestFailSenario_03, testPropTestFailSenario_04)
 
 import Expect
 import Pgn

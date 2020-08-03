@@ -1,4 +1,4 @@
-module PgnFuzz exposing (fuzzTagPairTest)
+module PgnFuzz exposing (fuzzMoveTest, fuzzTagPairTest)
 
 import Expect
 import Fuzz exposing (Fuzzer, intRange, string)
@@ -81,26 +81,31 @@ fuzzMoveText =
     fuzzWordWithCharSet 2 10 randomMoveTextChar
 
 
+fuzzMoveTest : Test
+fuzzMoveTest =
+    fuzz3 (intRange 1 500) fuzzMoveText fuzzMoveText "test strings we think we support as movetext actually work as movetext" <|
+        \number white black ->
+            let
+                move =
+                    String.fromInt number ++ " " ++ white ++ " " ++ black
 
--- fuzzMoveTest : Test
--- fuzzMoveTest =
---     fuzz3 (intRange 1 500) fuzzMoveText fuzzMoveText "test strings we think we support as movetext actually work as movetext" <|
---         \number white black ->
---             let
---                 move =
---                     String.fromInt number ++ " " ++ white ++ " " ++ black
---                 parsed =
---                     { black = black, number = String.fromInt number, white = white }
---             in
---             if String.trim white == "" || String.trim black == "" then
---                 Expect.pass
---             else
---                 case Pgn.parseMove move of
---                     Ok res ->
---                         Expect.equal parsed res
---                     Err err ->
---                         err
---                             |> Pgn.parseErrorToString move
---                             |> Expect.fail
+                parsed =
+                    { black = black, number = String.fromInt number, white = white }
+            in
+            if String.trim white == "" || String.trim black == "" then
+                Expect.pass
+
+            else
+                case Pgn.parseMove move of
+                    Ok res ->
+                        Expect.equal parsed res
+
+                    Err err ->
+                        err
+                            |> Pgn.parseErrorToString move
+                            |> Expect.fail
+
+
+
 -- fuzzTagParis : Fuzz Pgn.TagPair
 -- fuzzTagPairs =

@@ -286,9 +286,9 @@ maybeCommentBlock =
 
 
 {-| Exlude all the gotcha variations of the EOF result string
-I've seen that confuse the parser with this:
+I've seen that confuse the parser:
 
-        reserved = Set.fromList <| [ "1/2-1/2", "0-1", "1-0", "1", "0", "-", "/", "2", "-1", "-0" ]
+        [ "1/2-1/2", "0-1", "1-0", "1", "0", "-", "/", "2", "-1", "-0" ]
 
 -}
 movetext : Parser String
@@ -303,7 +303,7 @@ movetext =
 moveNumber : Parser String
 moveNumber =
     variable
-        { start = Char.isDigit
+        { start = \c -> Char.isDigit c
         , inner = \c -> Char.isDigit c || c == '.'
         , reserved = Set.fromList [ "1-0", "0-1", "1/2-1/2" ]
         }
@@ -323,10 +323,18 @@ move =
                     |. parser
                 , succeed ()
                 ]
+
+        enforcedWhitespace =
+            oneOf
+                [ symbol " "
+                , symbol "\t"
+                , symbol "\n"
+                , symbol "\u{000D}"
+                ]
     in
     succeed Move
         |. spaces
-        |= moveNumber
+        |= backtrackable (moveNumber |. enforcedWhitespace)
         |. spaces
         |. maybeCommentBlock
         |. spaces
@@ -334,7 +342,7 @@ move =
         |. spaces
         |. maybeCommentBlock
         |. spaces
-        |. optional moveNumber
+        |. optional (backtrackable (moveNumber |. enforcedWhitespace))
         |. spaces
         |. maybeCommentBlock
         |. spaces
