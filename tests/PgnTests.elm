@@ -1,4 +1,12 @@
-module PgnTests exposing (testBangScenarioPropTestsRevealed, testParseTurnInlineComments, testParseTurnNoComments, testParseTurnsEolComments)
+module PgnTests exposing
+    ( testParseTurnInlineComments
+    , testParseTurnNoComments
+    , testParseTurnsEolComments
+    , testPropTestFailSenario_01
+    , testPropTestFailSenario_02
+    , testPropTestFailSenario_03
+    , testPropTestFailSenario_04
+    )
 
 import Expect
 import Pgn
@@ -80,8 +88,8 @@ testParseTurnsEolComments =
                         |> Expect.fail
 
 
-testBangScenarioPropTestsRevealed : Test
-testBangScenarioPropTestsRevealed =
+testPropTestFailSenario_01 : Test
+testPropTestFailSenario_01 =
     let
         tagpair =
             "[! \"!\"]"
@@ -91,7 +99,7 @@ testBangScenarioPropTestsRevealed =
             , value = "!"
             }
     in
-    test "Test an exclamation point in a tag pair parsed correcrtly" <|
+    test "Test a failure scenario from a proptest has been addressed chapter 1" <|
         \_ ->
             case Pgn.parseTagPair tagpair of
                 Ok t ->
@@ -100,4 +108,76 @@ testBangScenarioPropTestsRevealed =
                 Err err ->
                     err
                         |> Pgn.parseErrorToString tagpair
+                        |> Expect.fail
+
+
+testPropTestFailSenario_02 : Test
+testPropTestFailSenario_02 =
+    let
+        move =
+            "0 όμX 7بسlე"
+
+        res =
+            { black = "7بسlე"
+            , number = "0"
+            , white = "όμX"
+            }
+    in
+    test "Test a failure scenario from a proptest has been addressed chapter 2" <|
+        \_ ->
+            case Pgn.parseMove move of
+                Ok t ->
+                    Expect.equal t res
+
+                Err err ->
+                    err
+                        |> Pgn.parseErrorToString move
+                        |> Expect.fail
+
+
+testPropTestFailSenario_03 : Test
+testPropTestFailSenario_03 =
+    let
+        move =
+            "0 hறխοṃտ 5σอ"
+
+        res =
+            { black = "5σอ"
+            , number = "0"
+            , white = "hறխοṃտ"
+            }
+    in
+    test "Test a failure scenario from a proptest has been addressed chapter 3" <|
+        \_ ->
+            case Pgn.parseMove move of
+                Ok t ->
+                    Expect.equal t res
+
+                Err err ->
+                    err
+                        |> Pgn.parseErrorToString move
+                        |> Expect.fail
+
+
+testPropTestFailSenario_04 : Test
+testPropTestFailSenario_04 =
+    let
+        move =
+            "0 ാsCവクWờี메బ 6キযøোľξം"
+
+        res =
+            { black = "6キযøোľξം"
+            , number = "0"
+            , white = "ാsCവクWờี메బ"
+            }
+    in
+    test "Test a failure scenario from a proptest has been addressed chapter 4" <|
+        \_ ->
+            case Pgn.parseMove move of
+                Ok t ->
+                    Expect.equal t res
+
+                Err err ->
+                    err
+                        |> Pgn.parseErrorToString move
                         |> Expect.fail

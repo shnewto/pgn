@@ -47,6 +47,7 @@ import Parser
         , symbol
         , variable
         )
+import Pgn.Reference as Ref
 import Set
 
 
@@ -284,50 +285,18 @@ maybeCommentBlock =
         ]
 
 
+{-| Exlude all the gotcha variations of the EOF result string
+I've seen that confuse the parser with this:
+
+        reserved = Set.fromList <| [ "1/2-1/2", "0-1", "1-0", "1", "0", "-", "/", "2", "-1", "-0" ]
+
+-}
 movetext : Parser String
 movetext =
-    let
-        legalFirstCharMoveText =
-            [ 'a'
-            , 'b'
-            , 'c'
-            , 'd'
-            , 'e'
-            , 'f'
-            , 'g'
-            , 'h'
-            , 'K'
-            , 'Q'
-            , 'B'
-            , 'N'
-            , 'K'
-            , 'n'
-            , 'R'
-            , 'O'
-            , 'o'
-            ]
-
-        allMoveText =
-            legalFirstCharMoveText
-                ++ [ '1'
-                   , '2'
-                   , '3'
-                   , '4'
-                   , '5'
-                   , '6'
-                   , '7'
-                   , '8'
-                   , '-'
-                   , '+'
-                   , '#'
-                   , '='
-                   , 'x'
-                   ]
-    in
     variable
-        { start = \c -> List.member c legalFirstCharMoveText
-        , inner = \c -> List.member c allMoveText
-        , reserved = Set.fromList <| [ "1-0, 0-1", "1/2-1/2" ]
+        { start = \c -> List.member c <| String.toList Ref.movetextChars
+        , inner = \c -> List.member c <| String.toList Ref.movetextChars
+        , reserved = Set.fromList <| [ "1/2-1/2", "0-1", "1-0", "1", "0", "-", "/", "2", "-1", "-0" ]
         }
 
 
@@ -336,7 +305,7 @@ moveNumber =
     variable
         { start = Char.isDigit
         , inner = \c -> Char.isDigit c || c == '.'
-        , reserved = Set.fromList [ "1-0, 0-1", "1/2-1/2" ]
+        , reserved = Set.fromList [ "1-0", "0-1", "1/2-1/2" ]
         }
         |> andThen
             (\v ->
