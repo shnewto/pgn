@@ -11,7 +11,7 @@ module Pgn.Reference exposing (movetextChars, pieceNames)
 
 
 {-| From: <https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Piece_names_in_various_languages>
-A list of characters (with duplicates removed) from the list above + numbers used as the set of legal values of movetext in a PGN. Exposed to facilitate testing.
+A list of characters (with duplicates removed) from the list above + numbers used as the set of legal values of movetext in a PGN.
 -}
 movetextChars : String
 movetextChars =
@@ -20,7 +20,7 @@ movetextChars =
 
 {-| From: <https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Piece_names_in_various_languages>
 Every name / character for pieces from the link above, subject to be extended but used as a reference
-for characters to support. Exposed to facilitate testing.
+for characters to support.
 -}
 pieceNames : List String
 pieceNames =
