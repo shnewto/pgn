@@ -184,18 +184,15 @@ parseTagPairs r =
 {- Errors -}
 
 
-{-| The `parseErrorToString` is to help pinpoint what's causing issues with a parse. It simply produces a string for human consumption that describes what the parser thinks went wrong, followed by the line of the error then the token itself in `''`. For example, attempting to parse this invalid tag pair:
+{-| The `parseErrorToString` is to help pinpoint what's causing issues with a parse. It simply produces a string for human consumption that describes what the parser thinks went wrong, followed by the line of the error then a `^` below where it thinks the problem is. For example, attempting to parse this invalid tag pair:
 
-        [Event After the title, everything else in the tag pair needs to be in quotes!]
+        [EventTitle After the title, everything else in the tag pair needs to be in quotes!]
 
 would result in this output:
 
-        error on row: 1, col: 8. Problem: Expecting '"'
-
-        > '[Event After the title everything else in the tag pair needs to be in quotes!]'
-        vent 'A'fter
-
-It might look a little strage but last line of the error string includes a few characters to the right and to the left of the offender.
+        error on row:  1, col: 13. Problem: Expecting: \"
+        > [EventTitle After the title everything else in the tag pair needs to be in quotes!]
+                      ^
 
 -}
 parseErrorToString : String -> List DeadEnd -> String
@@ -220,7 +217,7 @@ parseErrorToString source deadEnds =
 
                     --
                     ( spacesToProblem, _ ) =
-                        List.Extra.mapAccuml update inital <| List.range 1 de.row
+                        List.Extra.mapAccuml update inital <| List.range 1 (de.col - 1)
                 in
                 "\n\nerror on row:  "
                     ++ String.fromInt de.row
