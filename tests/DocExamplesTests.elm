@@ -77,7 +77,7 @@ testParseErrorToString : Test
 testParseErrorToString =
     let
         tagPair =
-            "[Event After the title everything else in the tag pair needs to be in quotes!]"
+            "[EventTitle After the title everything else in the tag pair needs to be in quotes!]"
 
         parsedTagPair =
             Pgn.parseTagPair tagPair
@@ -85,9 +85,9 @@ testParseErrorToString =
         expectedErrorString =
             """
 
-error on row:  1, col: 8. Problem: Expecting: "
-> [Event After the title everything else in the tag pair needs to be in quotes!]
-   ^"""
+error on row:  1, col: 13. Problem: Expecting: "
+> [EventTitle After the title everything else in the tag pair needs to be in quotes!]
+              ^"""
     in
     test "Test that the example used in the parseErrorToString docs produces an expected result" <|
         \_ ->
