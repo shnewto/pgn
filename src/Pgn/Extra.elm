@@ -1,6 +1,6 @@
 module Pgn.Extra exposing
     ( SevenTag
-    , toSevenTag
+    , toSevenTag, toString
     )
 
 {-| Convenience functions for working with Pgn
@@ -13,7 +13,7 @@ module Pgn.Extra exposing
 
 # Functions
 
-@docs toSevenTag
+@docs toSevenTag, toString
 
 -}
 
@@ -89,3 +89,40 @@ toSevenTag pairs =
                     st
     in
     res
+
+
+{-| The `toString` isn't sophisticated but can be helpful if you want to display a parsed PGN in a way that's _visually_ parseable. It separates each TagPair with `\n`, the TagPairs from the Moves with `\n\n`, and each Move with `\n`
+-}
+toString : Pgn.Pgn -> String
+toString pgn =
+    let
+        result =
+            let
+                normalized title =
+                    String.trim (String.toLower title)
+            in
+            pgn.tagPairs
+                |> List.Extra.find
+                    (\p ->
+                        normalized p.title == "result"
+                    )
+                |> Maybe.map .value
+                |> Maybe.withDefault ""
+
+        tagPairs =
+            pgn.tagPairs
+                |> List.map
+                    (\p ->
+                        "[" ++ p.title ++ " \"" ++ p.value ++ "\"]"
+                    )
+                |> String.join "\n"
+
+        moves =
+            pgn.moves
+                |> List.map
+                    (\m ->
+                        m.number ++ ". " ++ m.white ++ " " ++ m.black
+                    )
+                |> String.join "\n"
+    in
+    tagPairs ++ "\n\n" ++ moves ++ "\n" ++ result ++ "\n"
