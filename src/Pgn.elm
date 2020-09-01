@@ -293,7 +293,7 @@ movetext =
     variable
         { start = \c -> List.member c <| String.toList Ref.movetextChars
         , inner = \c -> List.member c <| String.toList Ref.movetextChars
-        , reserved = Set.fromList <| [ "1/2-1/2", "0-1", "1-0", "1", "0", "-", "/", "2", "-1", "-0" ]
+        , reserved = Set.fromList <| [ "1/2-1/2", "0-1", "1-0", "1", "0", "-", "/", "2", "-1", "-0", "1-", "0-" ]
         }
 
 

@@ -1,7 +1,18 @@
-module PgnTests exposing (testParseTurnInlineComments, testParseTurnNoComments, testParseTurnsEolComments, testPropTestFailSenario_01, testPropTestFailSenario_02, testPropTestFailSenario_03, testPropTestFailSenario_04)
+module PgnTests exposing
+    ( testParseTurnInlineComments
+    , testParseTurnNoComments
+    , testParseTurnsEolComments
+    , testPropTestFailSenario_01
+    , testPropTestFailSenario_02
+    , testPropTestFailSenario_03
+    , testPropTestFailSenario_04
+    , testToString
+    )
 
 import Expect
 import Pgn
+import Pgn.Extra
+import Shared exposing (..)
 import Test exposing (Test, test)
 
 
@@ -172,4 +183,19 @@ testPropTestFailSenario_04 =
                 Err err ->
                     err
                         |> Pgn.parseErrorToString move
+                        |> Expect.fail
+
+
+testToString : Test
+testToString =
+    test "Test the toString function produces the string we'd expect from a given PGN" <|
+        \_ ->
+            case Pgn.parse polgarVsKasparovPgnPrettyish of
+                Ok t ->
+                    Pgn.Extra.toString t
+                        |> Expect.equal polgarVsKasparovPgnPrettyish
+
+                Err err ->
+                    err
+                        |> Pgn.parseErrorToString polgarVsKasparovPgnPrettyish
                         |> Expect.fail
