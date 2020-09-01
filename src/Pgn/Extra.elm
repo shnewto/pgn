@@ -91,7 +91,7 @@ toSevenTag pairs =
     res
 
 
-{-| The `toString` isn't sophisticated but can be helpful if you want to display a parsed PGN in a way that's _visually_ parseable. It separates each TagPair with `\n`, the TagPairs from the Moves with `\n\n`, and each Move with `\n`
+{-| The `toString` can be helpful if you want to display a parsed PGN in a way that's _visually_ parseable. It separates each TagPair with `\n`, the TagPairs from the Moves with `\n\n`, and each Move with `\n`
 -}
 toString : Pgn.Pgn -> String
 toString pgn =
