@@ -1,4 +1,4 @@
-[![ci status](https://github.com/shnewto/pgn/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/shnewto/pgn/actions)
+[![ci status](https://github.com/shnewto/pgn/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/shnewto/pgn/actions)
 [![latest version](https://reiner-dolp.github.io/elm-badges/shnewto/pgn/version.svg)](https://package.elm-lang.org/packages/shnewto/pgn/latest/)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
