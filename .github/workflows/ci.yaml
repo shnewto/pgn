@@ -6,51 +6,51 @@ on:
   push:
 
 jobs:
-  macos-latest-stable:
+  macos-latest:
     runs-on: macos-latest
     steps:
       - name: checkout repo
         uses: actions/checkout@v2    
       - name: install elm
         run: |
-          npm install elm
+          npm install -g elm
       - name: build
         run: |
-          ./node_modules/elm/bin/elm make
+          elm make
       - name: build docs
         run: |
-          ./node_modules/elm/bin/elm make --docs=docs.json        
+          elm make --docs=docs.json        
       - name: install elm-format
         run: |
-          npm install elm-format
+          npm install -g elm-format
       - name: format
         run: |
-          ./node_modules/elm-format/bin/elm-format src --validate          
+          elm-format src --validate          
       - name: install elm-test
         run: |
-          npm install elm-test
+          npm install -g elm-test
       - name: test
         run: |
-          ./node_modules/elm-test/bin/elm-test
+         elm-test
 
 
-  windows-latest-stable:
+  windows-latest:
     runs-on: windows-latest
     steps:
       - name: checkout repo
         uses: actions/checkout@v2    
       - name: install elm
         run: |
-          npm install elm
+          npm install -g elm
       - name: build
         run: |
-          ./node_modules/elm/bin/elm make
+          elm make
       - name: install elm-test
         run: |
-          npm install elm-test
+          npm install -g elm-test
       - name: test
         run: |
-          ./node_modules/elm-test/bin/elm-test
+          elm-test
 
   ubuntu-latest:
     runs-on: ubuntu-latest
@@ -59,13 +59,13 @@ jobs:
         uses: actions/checkout@v2    
       - name: install elm
         run: |
-          npm install elm
+          npm install -g elm
       - name: build
         run: |
-          ./node_modules/elm/bin/elm make
+          elm make
       - name: install elm-test
         run: |
-          npm install elm-test
+          npm install -g elm-test
       - name: test
         run: |
-          ./node_modules/elm-test/bin/elm-test
+          elm-test
