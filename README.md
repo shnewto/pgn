@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/shnewto/pgn.svg?branch=main)](https://travis-ci.org/shnewto/pgn)
-[![Elm package](https://shields.cdn.bka.li/elm-package/v/shnewto/pgn)](https://package.elm-lang.org/packages/shnewto/pgn/latest/)
-[![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![ci status](https://github.com/shnewto/pgn/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/shnewto/pgn/actions)
+![latest version](https://reiner-dolp.github.io/elm-badges/shnewto/pgn/version.svg)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 # Pgn
 `Pgn` is a library for parsing "Portable Game Notation" (PGN) for standard chess. PGN is a plain text standard for recording chess games. For more information check out [the Wikipedia entry on PGN](https://en.wikipedia.org/wiki/Portable_Game_Notation) or [the PGN spec itself](https://ia802908.us.archive.org/26/items/pgn-standard-1994-03-12/PGN_standard_1994-03-12.txt)

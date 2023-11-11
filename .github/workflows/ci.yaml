@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  macos-latest:
+    runs-on: macos-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2    
+      - name: install elm
+        run: |
+          npm install -g elm
+      - name: build
+        run: |
+          elm make
+      - name: build docs
+        run: |
+          elm make --docs=docs.json        
+      - name: install elm-format
+        run: |
+          npm install -g elm-format
+      - name: format
+        run: |
+          elm-format src --validate          
+      - name: install elm-test
+        run: |
+          npm install -g elm-test
+      - name: test
+        run: |
+         elm-test
+
+
+  windows-latest:
+    runs-on: windows-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2    
+      - name: install elm
+        run: |
+          npm install -g elm
+      - name: build
+        run: |
+          elm make
+      # TODO: figure out why this fails and how to make it succeed when it's supposed to :)
+      # - name: install elm-test
+      #   run: |
+      #     npm install -g elm-test
+      # - name: test
+      #   run: |
+      #     elm-test
+
+  ubuntu-latest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2    
+      - name: install elm
+        run: |
+          npm install -g elm
+      - name: build
+        run: |
+          elm make
+      - name: install elm-test
+        run: |
+          npm install -g elm-test
+      - name: test
+        run: |
+          elm-test
