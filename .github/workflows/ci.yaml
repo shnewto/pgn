@@ -9,6 +9,8 @@ jobs:
   macos-latest-stable:
     runs-on: macos-latest
     steps:
+      - name: checkout repo
+        uses: actions/checkout@v2    
       - name: setup elm
         uses: jorelali/setup-elm@v5
         with:
@@ -36,6 +38,8 @@ jobs:
   windows-latest-stable:
     runs-on: windows-latest
     steps:
+      - name: checkout repo
+        uses: actions/checkout@v2    
       - name: setup elm
         uses: jorelali/setup-elm@v5
         with:
@@ -53,6 +57,8 @@ jobs:
   windows-latest-nightly:
     runs-on: windows-latest
     steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
       - name: setup elm
         uses: jorelali/setup-elm@v5
         with:
@@ -70,6 +76,8 @@ jobs:
   ubuntu-latest:
     runs-on: ubuntu-latest
     steps:
+      - name: checkout repo
+        uses: actions/checkout@v2    
       - name: setup elm
         uses: jorelali/setup-elm@v5
         with:
