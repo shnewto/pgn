@@ -4,7 +4,6 @@ import Expect
 import Fuzz
     exposing
         ( Fuzzer
-        , custom
         , intRange
         , list
         , map
@@ -18,7 +17,6 @@ import Random
 import Random.Char
 import Random.Extra
 import Random.String
-import Shrink
 import String
 import Test exposing (Test, fuzz, fuzz2, fuzz3)
 
@@ -78,29 +76,28 @@ fuzzMoveTest =
                         |> Expect.fail
 
 
-fuzzWordWithCharSet : Int -> Int -> Random.Generator Char -> Fuzzer String
+fuzzWordWithCharSet : Int -> Int -> Fuzzer Char -> Fuzzer String
 fuzzWordWithCharSet min max charSet =
-    custom
-        (Random.String.rangeLengthString min max charSet)
-        Shrink.noShrink
+    Fuzz.listOfLengthBetween min max charSet
+        |> Fuzz.map String.fromList
 
 
 wordFuzzer : Fuzzer String
 wordFuzzer =
     oneOf
-        [ fuzzWordWithCharSet 1 30 Random.Char.nko
-        , fuzzWordWithCharSet 1 30 Random.Char.hangulJamo
-        , fuzzWordWithCharSet 1 30 Random.Char.latin
-        , fuzzWordWithCharSet 1 30 Random.Char.hiragana
-        , fuzzWordWithCharSet 1 30 Random.Char.cyrillic
-        , fuzzWordWithCharSet 1 30 Random.Char.cjkUnifiedIdeograph
-        , fuzzWordWithCharSet 1 30 Random.Char.ethiopic
-        , fuzzWordWithCharSet 1 30 Random.Char.latin
-        , fuzzWordWithCharSet 1 30 Random.Char.latinExtendedA
-        , fuzzWordWithCharSet 1 30 Random.Char.latinExtendedB
-        , fuzzWordWithCharSet 1 30 Random.Char.latinExtendedC
-        , fuzzWordWithCharSet 1 30 Random.Char.latinExtendedD
-        , fuzzWordWithCharSet 1 30 Random.Char.generalPunctuation
+        [ fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.nko
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.hangulJamo
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.latin
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.hiragana
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.cyrillic
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.cjkUnifiedIdeograph
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.ethiopic
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.latin
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.latinExtendedA
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.latinExtendedB
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.latinExtendedC
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.latinExtendedD
+        , fuzzWordWithCharSet 1 30 <| Fuzz.fromGenerator Random.Char.generalPunctuation
         ]
 
 
@@ -112,7 +109,7 @@ randomMoveTextChar =
 
 fuzzMoveText : Fuzzer String
 fuzzMoveText =
-    fuzzWordWithCharSet 2 10 randomMoveTextChar
+    fuzzWordWithCharSet 2 10 <| Fuzz.fromGenerator randomMoveTextChar
 
 
 fuzzTagPair : Fuzzer String
