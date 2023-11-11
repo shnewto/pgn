@@ -26,7 +26,7 @@ jobs:
           npm install elm-format
       - name: format
         run: |
-          ./node_modules/elm-test/bin/elm-format src --validate          
+          ./node_modules/elm-format/bin/elm-format src --validate          
       - name: install elm-test
         run: |
           npm install elm-test
