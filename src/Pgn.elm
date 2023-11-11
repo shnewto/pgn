@@ -160,7 +160,7 @@ parseMoves t =
 
 -}
 parseTagPair : String -> Result (List DeadEnd) TagPair
-parseTagPair r      =
+parseTagPair r =
     Parser.run tagPair r
 
 
