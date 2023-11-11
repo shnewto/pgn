@@ -6,16 +6,7 @@ on:
   push:
 
 jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: jorelali/setup-elm@v5
-      with:
-        elm-version: 0.19.1
-    - run: elm-format src --validate
-    
   macos-latest-stable:
-    needs: [format]
     runs-on: macos-latest
     steps:
       - name: setup elm
@@ -28,6 +19,12 @@ jobs:
       - name: build docs
         run: |
           elm make --docs=docs.json        
+      - name: install elm-format
+        run: |
+          npm install elm-format
+      - name: format
+        run: |
+          ./node_modules/elm-test/bin/elm-format src --validate          
       - name: install elm-test
         run: |
           npm install elm-test
@@ -37,7 +34,6 @@ jobs:
 
 
   windows-latest-stable:
-    needs: [format]
     runs-on: windows-latest
     steps:
       - name: setup elm
@@ -47,9 +43,6 @@ jobs:
       - name: build
         run: |
           elm make
-      - name: build docs
-        run: |
-          elm make --docs=docs.json        
       - name: install elm-test
         run: |
           npm install elm-test
@@ -58,7 +51,6 @@ jobs:
           ./node_modules/elm-test/bin/elm-test
 
   windows-latest-nightly:
-    needs: [format]
     runs-on: windows-latest
     steps:
       - name: setup elm
@@ -68,9 +60,6 @@ jobs:
       - name: build
         run: |
           elm make
-      - name: build docs
-        run: |
-          elm make --docs=docs.json        
       - name: install elm-test
         run: |
           npm install elm-test
@@ -79,7 +68,6 @@ jobs:
           ./node_modules/elm-test/bin/elm-test
 
   ubuntu-latest:
-    needs: [format]
     runs-on: ubuntu-latest
     steps:
       - name: setup elm
@@ -89,9 +77,6 @@ jobs:
       - name: build
         run: |
           elm make
-      - name: build docs
-        run: |
-          elm make --docs=docs.json        
       - name: install elm-test
         run: |
           npm install elm-test
