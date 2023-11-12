@@ -1,0 +1,62 @@
+name: tag and publish [manual]
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag-increment:
+        default: patch
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write    
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2    
+      - name: install elm
+        run: |
+          npm install -g elm
+      - name: build
+        run: |
+          elm make
+      - name: build docs
+        run: |
+          elm make --docs=docs.json        
+      - name: install elm-format
+        run: |
+          npm install -g elm-format
+      - name: format
+        run: |
+          elm-format src --validate          
+      - name: install elm-test
+        run: |
+          npm install -g elm-test
+      - name: test
+        run: |
+         elm-test
+      - name: bump-version
+        run: |
+          ELM_BUMP_OUTPUT="$(echo 'y' | elm bump)"
+          echo "NEW_TAG=$($ELM_BUMP_OUTPUT | grep -Eoh '[0-9]+[.][0-9]+[.][0-9]+')" >> $GITHUB_OUTPUT
+          echo "$ELM_BUMP_OUTPUT"
+      - name: commit 
+        run: |
+          git add elm.json
+          git commit -m "updating version to ${{ steps.bump-version.outputs.NEW_TAG }}"
+          git push
+      - name: add tag
+        run: |
+          git tag -a ${{ steps.bump-version.outputs.NEW_TAG }} -m ${{ steps.bump-version.outputs.NEW_TAG }}
+          git push --tags
+      - name: publish
+        run: |
+          elm publish
