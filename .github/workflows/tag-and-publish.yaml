@@ -2,15 +2,6 @@ name: tag and publish [manual]
 
 on:
   workflow_dispatch:
-    inputs:
-      tag-increment:
-        default: patch
-        required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
 
 jobs:
   publish:
